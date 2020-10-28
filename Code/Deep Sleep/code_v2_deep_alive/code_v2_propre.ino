@@ -6,8 +6,8 @@
 #include <WiFiMulti.h>
 
 // Option WiFi
-#define Name_Wifi "devolo-5ac"
-#define Mdp_Wifi "ACDCCTGKBZXULRUW"
+const char *Name_Wifi = "devolo-5ac";
+const char *Mdp_Wifi = "ACDCCTGKBZXULRUW";
 // Propriétés du WIFI
 WiFiClient espClient;
 WiFiMulti WiFiMulti;
@@ -15,9 +15,9 @@ WiFiMulti WiFiMulti;
 #define Time_to_sleep 86400000000   /* Time ESP32 will go to sleep (in microseconds); correspond a 24h*/
 // Option MQTT
 #define PAYLOAD_BUFFER_SIZE  (60)
-#define name_device "GK001"
-#define Id_name "Geoffrey"
-#define Mdp_Lname "Lazzari"
+const char *name_device = "GK001";
+const char *Id_name = "Geoffrey";
+const char *Mdp_Lname = "Lazzari";
 // Propriétés MQTT
 char formatted_payload[PAYLOAD_BUFFER_SIZE];
 PubSubClient client(espClient);
@@ -78,7 +78,7 @@ void send_alarm(int alive_or_accelero) {
 }
 
 void setup() {
-    M5.begin();
+    M5.begin(false,true,false);
     M5.Axp.SetLDO2(false);
     // disable all wakeup sources
     esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);
@@ -88,7 +88,7 @@ void setup() {
     // initialization only on first awakening
     if (g_wom_count == 0) {
         M5.Mpu6886.Init(); // basic init
-        M5.Mpu6886.enableWakeOnMotion(M5.Mpu6886.AFS_16G, 50);
+        M5.Mpu6886.enableWakeOnMotion(M5.Mpu6886.AFS_16G, 20);
     }
     // check if it is the alive or the accelerometer which causes the awakening
     esp_sleep_wakeup_cause_t wakeup_reason;
@@ -103,4 +103,7 @@ void setup() {
     M5.Axp.SetSleep(); // conveniently turn off screen, etc.
     delay(5000 - millis());
     esp_deep_sleep_start();
+}
+
+void loop() {
 }
