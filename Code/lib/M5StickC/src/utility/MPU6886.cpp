@@ -122,7 +122,7 @@ void MPU6886::enableWakeOnMotion(Ascale ascale, uint8_t thresh_num_lsb) {
     regdata = regdata & 0b10001111; // set cyle, sleep, and gyro to standby, i.e. 0
     I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_PWR_MGMT_1, 1, &regdata);
 
-    regdata = 0b00000111; // set accel x, y, and z to standby 
+    regdata = 0b00010111; // set accel x, y, and z to standby 
     I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_PWR_MGMT_2, 1, &regdata);
 
     /* Step 2: Set Accelerometer LPF bandwidth to 218.1 Hz
@@ -140,7 +140,7 @@ void MPU6886::enableWakeOnMotion(Ascale ascale, uint8_t thresh_num_lsb) {
     /* Step 3: Enable Motion Interrupt
         • In INT_ENABLE register (0x38) set WOM_INT_EN = 111 to enable motion interrupt
     */
-    regdata = 0b11100000; // enable wake-on-motion interrupt for X, Y, and Z axes
+    regdata = 0b00100000; // enable wake-on-motion interrupt for X, Y, and Z axes
     I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_INT_ENABLE, 1, &regdata);
     
     /* Step 4: Set Motion Threshold
@@ -171,7 +171,7 @@ void MPU6886::enableWakeOnMotion(Ascale ascale, uint8_t thresh_num_lsb) {
     //  25.0 Hz = 1e3 / (1 +  39)
     //  50.0 Hz = 1e3 / (1 +  19) <----
     // 500.0 Hz = 1e3 / (1 +   1)
-    regdata = 19;
+    regdata = 99;
     I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_SMPLRT_DIV, 1, &regdata);
 
     /* Step 8: Enable Cycle Mode (Accelerometer Low-Power Mode)
