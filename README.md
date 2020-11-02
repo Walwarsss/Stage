@@ -14,6 +14,8 @@ sauf que la batterie de M5StickC ne depasse pas les 95ma/h (riduclement petit).
       
 b) Code
 -----------------    
+**INTERRUPTION**
+
 Pour ce faire on utilise la fonction 'enableWakeOnMotion' pouyr parrametre l'accéléromètre pour émettre une intérruption
 
     void MPU6886::enableWakeOnMotion(Ascale ascale, uint8_t thresh_num_lsb) {
@@ -99,6 +101,7 @@ Pour ce faire on utilise la fonction 'enableWakeOnMotion' pouyr parrametre l'acc
         regdata = regdata | 0b00100000; // enable accelerometer low-power mode
         I2C_Write_NBytes(MPU6886_ADDRESS, MPU6886_PWR_MGMT_1, 1, &regdata);
     }
+**DEEPSLEEP**
 
 Ce qui va nous permettre de détecter l'ouverture de la porte.
 Pour le problème de la batterie on utillise le deep sleep, ce qui va plonger le M5StickC dans un mode veille.
