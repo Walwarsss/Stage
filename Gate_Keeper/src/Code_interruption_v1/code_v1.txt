@@ -1,0 +1,2 @@
+Pas de différance majeur entre les deux codes, juste du visuelle.
+Le code permet d'envoier une paylaod sur interruption de l'accéléromètre

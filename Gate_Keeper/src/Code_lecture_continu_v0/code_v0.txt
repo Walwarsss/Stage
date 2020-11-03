@@ -1,0 +1,1 @@
+Correspond au code qui lit en boucle l'accélération (avec le if (z > 0.3));

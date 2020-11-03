@@ -1,0 +1,2 @@
+code alive : premier code avec le alive implementer (code qui a tester si le alive marche)
+finished code : code final au propre, avec le deep sleep le alive et l'interruption
