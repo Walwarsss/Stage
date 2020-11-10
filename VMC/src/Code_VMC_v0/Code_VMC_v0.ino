@@ -25,18 +25,18 @@ RTC_DATA_ATTR int cpt_payload = 1;
 RTC_DATA_ATTR const uint16_t port = 1883;
 RTC_DATA_ATTR const char *host = "broker-dev.enovact.fr";
 
-int battery = 0;
+RTC_DATA_ATTR int battery = 0;
 RTC_DATA_ATTR uint32_t g_wom_count = 0;
 
 float x = 0;
 float y = 0;
 float z = 0;
-int move = 0;
+int vibration = 0;
 
 void format_payload() {
     delay(500);
     battery = (int)(M5.Axp.GetBatVoltage()  * 1000);
-    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"VMC01\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",cpt_payload,battery,move);
+    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"VMC01\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",cpt_payload,battery,vibration);
     cpt_payload++;
     return;
 }
@@ -87,11 +87,11 @@ void setup() {
     }
     M5.MPU6886.getAccelData(&x,&y,&z);
     if (y < 0.03) {
-        move = 0;
+        vibration = 0;
         send_alarm();
     }
     else {
-        move = 1;
+        vibration = 1;
         send_alarm();
     }
     // Increment boot number it every reboot
