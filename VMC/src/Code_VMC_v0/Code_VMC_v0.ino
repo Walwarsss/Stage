@@ -12,7 +12,7 @@ const char *Mdp_Wifi = "ACDCCTGKBZXULRUW";
 WiFiClient espClient;
 WiFiMulti WiFiMulti;
 // Propriétés Timer
-#define Time_to_sleep 900000000 /* Time ESP32 will go to sleep (in microseconds); correspond a 15min*/
+#define Time_to_sleep 1500/*900000000*/ /* Time ESP32 will go to sleep (in microseconds); correspond a 15min*/
 // Option MQTT
 #define PAYLOAD_BUFFER_SIZE  (60)
 const char *name_device = "GK001";
@@ -28,10 +28,15 @@ RTC_DATA_ATTR const char *host = "broker-dev.enovact.fr";
 int battery = 0;
 RTC_DATA_ATTR uint32_t g_wom_count = 0;
 
-void format_payload(int vmc) {
+float x = 0;
+float y = 0;
+float z = 0;
+int move = 0;
+
+void format_payload() {
     delay(500);
     battery = (int)(M5.Axp.GetBatVoltage()  * 1000);
-    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"VMC01\",\"cnt\":%d,\"bat\":%d}",cpt_payload,battery);
+    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"VMC01\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",cpt_payload,battery,move);
     cpt_payload++;
     return;
 }
@@ -80,16 +85,21 @@ void setup() {
     if (g_wom_count == 0) {
         M5.Mpu6886.Init(); // basic init
     }
-    // check if it is the alive or the accelerometer which causes the awakening
-    esp_sleep_wakeup_cause_t wakeup_reason;
-    wakeup_reason = esp_sleep_get_wakeup_cause();
+    M5.MPU6886.getAccelData(&x,&y,&z);
     if (y < 0.03) {
-       send_alarm()
+        move = 0;
+        send_alarm();
+    }
+    else {
+        move = 1;
+        send_alarm();
     }
     // Increment boot number it every reboot
     g_wom_count++;
     // Go to sleep now
     M5.Axp.SetSleep(); // conveniently turn off screen, etc.
-    delay(5000 - millis());
     esp_deep_sleep_start();
+}
+void loop() {
+    //test
 }
