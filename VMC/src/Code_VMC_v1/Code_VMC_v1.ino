@@ -87,7 +87,7 @@ void setup() {
         M5.Mpu6886.Init(); // basic init
     }
     M5.MPU6886.getAccelData(&x,&y,&z);
-    is_vmc_on = (y<0.03) ? false : true;
+    is_vmc_on = (y>0.03) ? false : true;
     send_state();
     // Increment boot number it every reboot
     g_wom_count++;
