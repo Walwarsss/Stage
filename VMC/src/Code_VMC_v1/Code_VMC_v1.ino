@@ -31,12 +31,12 @@ RTC_DATA_ATTR uint32_t g_wom_count = 0;
 float x = 0;
 float y = 0;
 float z = 0;
-int vibration = 0;
+bool is_vmc_on = false;
 
 void format_payload() {
     delay(500);
     battery = (int)(M5.Axp.GetBatVoltage()  * 1000);
-    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"VMC01\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",cpt_payload,battery,vibration);
+    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"VMC01\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",cpt_payload,battery,(int)is_vmc_on);
     cpt_payload++;
     return;
 }
@@ -77,16 +77,17 @@ void send_state() {
 void setup() {
     M5.begin(false,true,false);
     M5.Axp.SetLDO2(false);
+    M5.Axp.SetLDO3(false);
     // disable all wakeup sources
     esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);
-    // enable waking up on pin 35 (from IMU)
+    // enable waking up on RTC timer
     esp_sleep_enable_timer_wakeup(Time_to_sleep);
     // initialization only on first awakening
     if (g_wom_count == 0) {
         M5.Mpu6886.Init(); // basic init
     }
     M5.MPU6886.getAccelData(&x,&y,&z);
-    vibration = (y<0.03) ? 0 : 1;
+    is_vmc_on = (y<0.03) ? false : true;
     send_state();
     // Increment boot number it every reboot
     g_wom_count++;
