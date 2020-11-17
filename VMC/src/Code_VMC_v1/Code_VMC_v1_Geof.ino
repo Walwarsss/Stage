@@ -82,11 +82,12 @@ void setup() {
     M5.begin(false,true,false);
     M5.Axp.SetLDO2(false);
     M5.Axp.SetLDO3(false);
+
     // disable all wakeup sources
     esp_sleep_disable_wakeup_source(ESP_SLEEP_WAKEUP_ALL);
     // enable waking up on RTC timer
     esp_sleep_enable_timer_wakeup(Time_to_sleep);
-    // initialization only on first awakening
+    
     M5.Mpu6886.Init(); // basic init
     delay(2000);
     M5.MPU6886.getAccelData(&X,&Y,&Z);
@@ -97,6 +98,7 @@ void setup() {
     } else
       is_vmc_on = 0;
     send_state();
+    
     // Increment boot number it every reboot
     g_wom_count++;
     // Go to sleep now
