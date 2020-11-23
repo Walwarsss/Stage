@@ -107,3 +107,6 @@ Ce qui va nous permettre de détecter l'ouverture de la porte.
 Pour le problème de la batterie on utillise le deep sleep, ce qui va plonger le M5StickC dans un mode veille.
 (faire attention quand on passe en deep sleep)
 ![M5_en_deep](https://github.com/Walwarsss/Stage/blob/main/image/deep%20sleep%20exampel.PNG)
+
+b) VMC
+-----------------
