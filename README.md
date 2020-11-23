@@ -10,7 +10,7 @@ Le but est d'utiliser **l'accéléromètre** du M5StickC pour surveiller l'ouver
 Pour ensuite envoier un message afin de prévenir l'ouverture de la porte.
 
 Mais la contrainte c'est que le projet est un Objet connecter et qu'il doit être autonome sur 3 mois
-sauf que la batterie de M5StickC ne depasse pas les 95ma/h (riduclement petit).
+sauf que la batterie de M5StickC ne depasse pas les 95ma/h (ridiculement petit).
       
 b) Code
 -----------------    
