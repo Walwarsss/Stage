@@ -10,7 +10,7 @@ Le but est d'utiliser **l'accéléromètre** du M5StickC pour surveiller l'ouver
 Pour ensuite envoier un message afin de prévenir l'ouverture de la porte.
 
 Mais la contrainte c'est que le projet est un Objet connecter et qu'il doit être autonome sur 3 mois
-sauf que la batterie de M5StickC ne depasse pas les 95ma/h (riduclement petit).
+sauf que la batterie de M5StickC ne depasse pas les 95ma/h (ridiculement petit).
       
 b) Code
 -----------------    
@@ -107,3 +107,6 @@ Ce qui va nous permettre de détecter l'ouverture de la porte.
 Pour le problème de la batterie on utillise le deep sleep, ce qui va plonger le M5StickC dans un mode veille.
 (faire attention quand on passe en deep sleep)
 ![M5_en_deep](https://github.com/Walwarsss/Stage/blob/main/image/deep%20sleep%20exampel.PNG)
+
+b) VMC
+-----------------
