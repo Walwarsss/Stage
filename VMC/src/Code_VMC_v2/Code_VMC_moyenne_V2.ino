@@ -43,6 +43,7 @@ float Y = 0;
 float Z = 0;
 
 int is_vmc_on = 0;
+RTC_DATA_ATTR int save_vmc_value = 1;
 
 void format_payload() {
     delay(500);
@@ -112,10 +113,10 @@ void setup() {
     // prend 3 second pour faire la moyenne
     
     is_vmc_on = (res > 0.030) ? 1 : 0;
-    if (is_vmc_on == 0) {
+    if (is_vmc_on != save_vmc_value) {
         send_state();
     }
-
+    save_vmc_value = is_vmc_on;
     // Increment boot number it every reboot
     g_wom_count++;
 
