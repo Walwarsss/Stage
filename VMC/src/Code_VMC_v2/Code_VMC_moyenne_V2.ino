@@ -47,7 +47,7 @@ int is_vmc_on = 0;
 void format_payload() {
     delay(500);
     battery = (int)(M5.Axp.GetBatVoltage()  * 1000);
-    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"VMC01\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",cpt_payload,battery,is_vmc_on);
+    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\"\":%s\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",name_device, cpt_payload, battery, is_vmc_on);
     cpt_payload++;
     return;
 }
@@ -98,21 +98,20 @@ void setup() {
     M5.Mpu6886.Init(); // basic init
     float res = 0;
     int i = 0;
-    while (i != 5) {
-        delay(500); // att 0.5sec pour l'échantillonnage des valuers
+    while (i != 30) {
+        delay(100); // att 0.1sec pour l'échantillonnage des valuers
         M5.MPU6886.getAccelData(&X,&Y,&Z);
+
+        if (Y < 0) { // pour ne pas avoir de nombre négatif 
+            Y = -Y;
+        }
         res += Y;
         i++;
     }
     res /= i;
-    // prend 2.5 second pour faire la moyenne
-    if (res < 0)
-        res *= -1;
-    // pour ne pas avoir de nombre négatif 
-    if (res > 0.030) {
-        is_vmc_on = 1;  
-    } else
-        is_vmc_on = 0;
+    // prend 3 second pour faire la moyenne
+    
+    is_vmc_on = (res > 0.030) ? 1 : 0;
     if (is_vmc_on == 0) {
         send_state();
     }
