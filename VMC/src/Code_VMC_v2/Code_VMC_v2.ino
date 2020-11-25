@@ -41,6 +41,9 @@ RTC_DATA_ATTR uint32_t g_wom_count = 0;
 float X = 0;
 float Y = 0;
 float Z = 0;
+float xX = 0;
+float xY = 0;
+float xZ = 0;
 
 int is_vmc_on = 0;
 
@@ -96,20 +99,12 @@ void setup() {
     esp_sleep_enable_timer_wakeup(Time_to_sleep);
     
     M5.Mpu6886.Init(); // basic init
-    float res = 0;
-    int i = 0;
-    while (i != 5) {
-        delay(500); // att 0.5sec pour l'échantillonnage des valuers
-        M5.MPU6886.getAccelData(&X,&Y,&Z);
-        res += Y;
-        i++;
-    }
-    res /= i;
-    // prend 2.5 second pour faire la moyenne
-    if (res < 0)
-        res *= -1;
-    // pour ne pas avoir de nombre négatif 
-    if (res > 0.030) {
+    delay(200);
+    M5.MPU6886.getAccelData(&X,&Y,&Z);
+    delay(200);
+    M5.MPU6886.getAccelData(&xX,&xY,&xZ);
+
+    if (Y > 0.030 && xY > 0.030) {
         is_vmc_on = 1;  
     } else
         is_vmc_on = 0;
