@@ -6,8 +6,8 @@
 #include <WiFiMulti.h>
 
 // Option WiFi
-const char *Name_Wifi = "iphone de Geoffrey";
-const char *Mdp_Wifi = "jeremylebg";
+const char *Name_Wifi = "";
+const char *Mdp_Wifi = "";
 
 // Parametres du code
 #define SERIAL_ENABLE false   // Pour activer l'écran mettre true 
@@ -19,11 +19,11 @@ WiFiClient espClient;
 WiFiMulti WiFiMulti;
 
 // Propriétés Timer
-#define Time_to_sleep 15000000/*900000000*/ /* Time ESP32 will go to sleep (in microseconds); correspond a 15min*/
+#define Time_to_sleep 1800000000 /* Time ESP32 will go to sleep (in microseconds); correspond a 30min*/
 
 // Option MQTT
 #define PAYLOAD_BUFFER_SIZE  (60)
-const char *name_device = "GK001";
+const char *name_device = "VMC01";
 const char *Id_name = "Geoffrey";
 const char *Mdp_Lname = "Lazzari";
 
@@ -103,14 +103,18 @@ void setup() {
     M5.MPU6886.getAccelData(&X,&Y,&Z);
     delay(200);
     M5.MPU6886.getAccelData(&xX,&xY,&xZ);
+
     if (Y > 0.030 && xY > 0.030) {
-      is_vmc_on = 1;  
+        is_vmc_on = 1;  
     } else
-      is_vmc_on = 0;
-    send_state();
-    
+        is_vmc_on = 0;
+    if (is_vmc_on == 0) {
+        send_state();
+    }
+
     // Increment boot number it every reboot
     g_wom_count++;
+    
     // Go to sleep now
     M5.Axp.SetSleep(); // conveniently turn off screen, etc.
     esp_deep_sleep_start();
