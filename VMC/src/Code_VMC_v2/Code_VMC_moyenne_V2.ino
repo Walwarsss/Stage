@@ -102,10 +102,7 @@ void setup() {
     while (i != 30) {
         delay(100); // att 0.1sec pour l'échantillonnage des valuers
         M5.MPU6886.getAccelData(&X,&Y,&Z);
-
-        if (Y < 0) { // pour ne pas avoir de nombre négatif 
-            Y = -Y;
-        }
+        Y = (Y < 0) ?-Y : Y;
         res += Y;
         i++;
     }
