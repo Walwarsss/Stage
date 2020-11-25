@@ -6,8 +6,8 @@
 #include <WiFiMulti.h>
 
 // Option WiFi
-const char *Name_Wifi = "";
-const char *Mdp_Wifi = "";
+const char *Name_Wifi = "devolo-5ac";
+const char *Mdp_Wifi = "ACDCCTGKBZXULRUW";
 
 // Parametres du code
 #define SERIAL_ENABLE false   // Pour activer l'écran mettre true 
@@ -114,7 +114,7 @@ void setup() {
 
     // Increment boot number it every reboot
     g_wom_count++;
-    
+
     // Go to sleep now
     M5.Axp.SetSleep(); // conveniently turn off screen, etc.
     esp_deep_sleep_start();
