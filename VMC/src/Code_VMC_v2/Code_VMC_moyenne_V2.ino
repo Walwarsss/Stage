@@ -13,6 +13,7 @@ const char *Mdp_Wifi = "ACDCCTGKBZXULRUW";
 #define SERIAL_ENABLE false   // Pour activer l'écran mettre true 
 #define LCD_ENABLE false      // Pour activer le seriam mettre true
 #define SEND_MQTT_ALARM true  // Pour désactier l'envoie de payload mettre false (jamais mettre false sinon le code ne fonctionne pas)
+#define ENVOI_SUR_EVENT false // Pour envoyer la payload seulement si changement d'état
 
 // Propriétés du WIFI
 WiFiClient espClient;
@@ -96,12 +97,12 @@ void setup() {
     // enable waking up on RTC timer
     esp_sleep_enable_timer_wakeup(Time_to_sleep);
     
-    M5.Mpu6886.Init(); // basic init
+    M5.IMU.Init(); // basic init
     float res = 0;
     int i = 0;
     while (i != 30) {
         delay(100); // att 0.1sec pour l'échantillonnage des valuers
-        M5.MPU6886.getAccelData(&X,&Y,&Z);
+        M5.IMU.getAccelData(&X,&Y,&Z);
         Y = (Y < 0) ?-Y : Y;
         res += Y;
         i++;
@@ -110,10 +111,14 @@ void setup() {
     // prend 3 second pour faire la moyenne
     
     is_vmc_on = (res > 0.030) ? 1 : 0;
-    if (is_vmc_on != save_vmc_value) {
+    if (ENVOI_SUR_EVENT == true) {
+        if (is_vmc_on != save_vmc_value) {
+            send_state();
+        }
+        save_vmc_value = is_vmc_on;
+    } else
         send_state();
-    }
-    save_vmc_value = is_vmc_on;
+
     // Increment boot number it every reboot
     g_wom_count++;
 
