@@ -48,8 +48,8 @@ RTC_DATA_ATTR int save_vmc_value = 1;
 
 void format_payload() {
     delay(500);
-    battery = (int)(M5.Axp.GetBatVoltage()  * 1000);
-    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\"\":%s\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",name_device, cpt_payload, battery, is_vmc_on);
+    battery = 4000;
+    snprintf (formatted_payload, PAYLOAD_BUFFER_SIZE, "{\"d\":\"%s\",\"cnt\":%d,\"bat\":%d,\"b1\":%d}",name_device, cpt_payload, battery, is_vmc_on);
     cpt_payload++;
     return;
 }
