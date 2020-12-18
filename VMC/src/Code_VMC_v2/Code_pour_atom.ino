@@ -56,18 +56,16 @@ void format_payload() {
     return;
 }
 
-void connect_to_wifi() {
+int connect_to_wifi() {
     int i = 0;
     WiFiMulti.addAP(Name_Wifi, Mdp_Wifi);
     // check if the wifi connection works
-    while(TIMEOUT_WIFI) {
-      WiFiMulti.run() != WL_CONNECTED;
+    while(WiFiMulti.run() != WL_CONNECTED) {
       i++;
       delay(100);
-      if(i > 5)
-        TIMEOUT_WIFI = false;
+      if(i > 5) return (false);
     }
-    return;
+    return (0);
 }
 
 void send_payload_to_broker() {
@@ -88,13 +86,13 @@ void disconnect_all() {
     return;
 }
 
-void send_state() {
+int send_state() {
     format_payload();
-    connect_to_wifi();
-    if (TIMEOUT_WIFI == false) return;
+    bool i = connect_to_wifi();
+    if (i == false) return (false);
     send_payload_to_broker();
     disconnect_all();
-    return;
+    return (0);
 }
 
 void setup() {
@@ -106,6 +104,7 @@ void setup() {
     esp_sleep_enable_timer_wakeup(Time_to_sleep);
     
     M5.IMU.Init(); // basic init
+    bool state_wifi = 0;
     float res = 0;
     int i = 0;
     while (i != 30) {
@@ -121,13 +120,12 @@ void setup() {
     is_vmc_on = (res > 0.030) ? 1 : 0;
     if (ENVOI_SUR_EVENT == true) {
         if (is_vmc_on != save_vmc_value) {
-            send_state();
+            state_wifi = send_state();
         }
         save_vmc_value = is_vmc_on;
     } else
-        send_state();
-    if (TIMEOUT_WIFI == false){
-      TIMEOUT_WIFI = true;
+        state_wifi = send_state();
+    if (TIMEOUT_WIFI != state_wifi){
       esp_sleep_enable_timer_wakeup(Time_to_reco);
     }
     // Increment boot number it every reboot
