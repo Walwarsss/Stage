@@ -91,6 +91,7 @@ void disconnect_all() {
 void send_state() {
     format_payload();
     connect_to_wifi();
+    if (TIMEOUT_WIFI == false) return;
     send_payload_to_broker();
     disconnect_all();
     return;
