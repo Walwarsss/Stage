@@ -14,13 +14,15 @@ const char *Mdp_Wifi = "ACDCCTGKBZXULRUW";
 #define LCD_ENABLE false      // Pour activer le seriam mettre true
 #define SEND_MQTT_ALARM true  // Pour désactier l'envoie de payload mettre false (jamais mettre false sinon le code ne fonctionne pas)
 #define ENVOI_SUR_EVENT false // Pour envoyer la payload seulement si changement d'état
+#define TIMEOUT_WIFI true    // Pour verifier la connexion au wifi
 
 // Propriétés du WIFI
 WiFiClient espClient;
 WiFiMulti WiFiMulti;
 
 // Propriétés Timer
-#define Time_to_sleep 1800000000 /* Time ESP32 will go to sleep (in microseconds); correspond a 30min*/
+#define Time_to_reco 300000000  // Temps pour retenter une connexion a internet si echouer 
+#define Time_to_sleep 1800000000 // Temps avant le prochain reveille
 
 // Option MQTT
 #define PAYLOAD_BUFFER_SIZE  (60)
@@ -55,12 +57,15 @@ void format_payload() {
 }
 
 void connect_to_wifi() {
+    int i = 0;
     WiFiMulti.addAP(Name_Wifi, Mdp_Wifi);
     // check if the wifi connection works
-    while(WiFiMulti.run() != WL_CONNECTED) {
+    while(TIMEOUT_WIFI) {
+      WiFiMulti.run() != WL_CONNECTED
       i++;
       delay(100);
-      if(i > 5) break;
+      if(i > 5)
+        TIMEOUT_WIFI = false;
     }
     return;
 }
@@ -120,7 +125,10 @@ void setup() {
         save_vmc_value = is_vmc_on;
     } else
         send_state();
-
+    if (TIMEOUT_WIFI == false){
+      TIMEOUT_WIFI = true;
+      esp_sleep_enable_timer_wakeup(Time_to_reco);
+    }
     // Increment boot number it every reboot
     g_wom_count++;
 
