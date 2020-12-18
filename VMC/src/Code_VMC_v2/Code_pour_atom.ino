@@ -57,7 +57,11 @@ void format_payload() {
 void connect_to_wifi() {
     WiFiMulti.addAP(Name_Wifi, Mdp_Wifi);
     // check if the wifi connection works
-    while(WiFiMulti.run() != WL_CONNECTED);
+    while(WiFiMulti.run() != WL_CONNECTED) {
+      i++;
+      delay(100);
+      if(i > 5) break;
+    }
     return;
 }
 
